@@ -57,10 +57,10 @@ class Web():
 
     }
 
-    teacher_url = r"https://jwc.swjtu.edu.cn/vatuu/StudentTeachResourceAction?setAction=teachCourse"
-    login_url = r'https://jwc.swjtu.edu.cn/vatuu/UserLoginAction'
-    Loading_url = r'https://jwc.swjtu.edu.cn/vatuu/UserLoadingAction'
-    imgUrl = r"https://jwc.swjtu.edu.cn/vatuu/GetRandomNumberToJPEG?test=%d" % time.time()
+    teacher_url = r"http://jwc.swjtu.edu.cn/vatuu/StudentTeachResourceAction?setAction=teachCourse"
+    login_url = r'http://jwc.swjtu.edu.cn/vatuu/UserLoginAction'
+    Loading_url = r'http://jwc.swjtu.edu.cn/vatuu/UserLoadingAction'
+    imgUrl = r"http://jwc.swjtu.edu.cn/vatuu/GetRandomNumberToJPEG?test=%d" % time.time()
     session = requests.Session()
 
     #    首先请求课程首页，获得所有课程信息，然后通过正则提取课程名和URL，将其写入classData中，
@@ -70,7 +70,7 @@ class Web():
         r.encoding = r.content  # 获取编码规则并设定
         text = r.text  # 得到网页
         # print(text)
-        re_string = r'https://+[ ./?%&=\w-]+[^\x00-\xff]+[^\x00-\xff]'  # 匹配URL
+        re_string = r'http://+[ ./?%&=\w-]+[^\x00-\xff]+[^\x00-\xff]'  # 匹配URL
         pattern = re.compile(re_string)
         results = pattern.findall(text)  # 匹配所有连接
         for url in results:
@@ -91,14 +91,14 @@ class Web():
         #       得到的results的url格式为'vatuu/StudentTeachResourceAction?setAction=
         #       teachResourceView&amp;resourceId=ECA1EB0AE97FFB5D',缺少完整地址，必须补足
         for reslut in results:
-            r = s.get(r'https://jwc.swjtu.edu.cn/' + reslut, verify=False)  # 补足连接
+            r = s.get(r'http://jwc.swjtu.edu.cn/' + reslut, verify=False)  # 补足连接
             r.encoding = r.content  # 获取编码规则并设定
             text = r.text
             name = re.compile(r'(?<=<td width="40%" style="color: #0EA33F">)(.*)</td>').findall(text)
             download_url = pattern.findall(text)  # 取得单个下载链接
             #            如果资源存在，则下载，如果下载失败或者文件打开失败，则报错，然后继续下载
             try:
-                download_url = r'https://jwc.swjtu.edu.cn/' + download_url[0]
+                download_url = r'http://jwc.swjtu.edu.cn/' + download_url[0]
                 ir = requests.get(download_url, verify=False)
 
                 if ir.status_code == 200:  # 如果网页存在，并正确响应
